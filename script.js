@@ -1,14 +1,34 @@
 document.addEventListener('DOMContentLoaded', function () {
+    function obterPerfisSalvos() {
+
+        var perfisSalvos = localStorage.getItem('perfis');
+        return perfisSalvos ? JSON.parse(perfisSalvos) : [];
+    }
+
+    function salvarPerfis(perfis) {
+
+        localStorage.setItem('perfis', JSON.stringify(perfis));
+    }
+
     function adicionarNovoPerfil() {
         var novoPerfil = prompt('Digite o nome do novo perfil:');
 
         if (novoPerfil) {
+
+            var perfis = obterPerfisSalvos();
+
+            perfis.push({
+                nome: novoPerfil,
+                fotoUrl: '/img/images.png' 
+            });
+
+            salvarPerfis(perfis);
+
             var novoPerfilLi = document.createElement('li');
             var novoPerfilContent = `
                 <a href="#">
                     <div class="usuario-foto">
-                        <span class="alterar-foto">Clique aqui para alterar</span>
-                        <img id="foto${novoPerfil}" class="perfil-img" src="/ProjetoCSSFLIX2023/img/images.png" alt="${novoPerfil}">
+                        <img id="foto${novoPerfil}" class="perfil-img" src="${perfis[perfis.length - 1].fotoUrl}" alt="${novoPerfil}">
                     </div>
                     <p id="nome${novoPerfil}">${novoPerfil}</p>
                 </a>
@@ -25,7 +45,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         var reader = new FileReader();
                         reader.onload = function (e) {
                             document.getElementById(`foto${novoPerfil}`).src = e.target.result;
-                            document.querySelector(`#foto${novoPerfil} + .alterar-foto`).style.display = 'none';
+
+                            var perfilAtualizado = perfis.find(p => p.nome === novoPerfil);
+                            if (perfilAtualizado) {
+                                perfilAtualizado.fotoUrl = e.target.result;
+                                salvarPerfis(perfis);
+                            }
                         };
                         reader.readAsDataURL(fotoSelecionada);
                     }
@@ -37,6 +62,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 var novoNome = prompt('Digite o novo nome:');
                 if (novoNome) {
                     document.getElementById(`nome${novoPerfil}`).textContent = novoNome;
+                    var perfilAtualizado = perfis.find(p => p.nome === novoPerfil);
+                    if (perfilAtualizado) {
+                        perfilAtualizado.nome = novoNome;
+                        salvarPerfis(perfis);
+                    }
                 }
             });
 

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-        function adicionarNovoPerfil() {
+    function adicionarNovoPerfil() {
         var novoPerfil = prompt('Digite o nome do novo perfil:');
 
         if (novoPerfil) {
@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var novoPerfilContent = `
                 <a href="#">
                     <div class="usuario-foto">
+                        <span class="alterar-foto">Clique aqui para alterar</span>
                         <img id="foto${novoPerfil}" class="perfil-img" src="/ProjetoCSSFLIX2023/img/images.png" alt="${novoPerfil}">
                     </div>
                     <p id="nome${novoPerfil}">${novoPerfil}</p>
@@ -24,13 +25,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         var reader = new FileReader();
                         reader.onload = function (e) {
                             document.getElementById(`foto${novoPerfil}`).src = e.target.result;
+                            document.querySelector(`#foto${novoPerfil} + .alterar-foto`).style.display = 'none';
                         };
                         reader.readAsDataURL(fotoSelecionada);
                     }
                 });
                 document.getElementById('inputFoto').click();
             });
-           
+
             document.getElementById(`nome${novoPerfil}`).addEventListener('click', function () {
                 var novoNome = prompt('Digite o novo nome:');
                 if (novoNome) {
@@ -41,6 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Parabéns! Novo perfil adicionado: ' + novoPerfil);
         }
     }
-    
+
     document.getElementById('adicionarPerfil').addEventListener('click', adicionarNovoPerfil);
 });
